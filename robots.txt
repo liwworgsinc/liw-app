@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://liwworgsinc.github.io/liw-app/sitemap.xml
