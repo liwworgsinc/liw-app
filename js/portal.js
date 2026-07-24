@@ -9,24 +9,32 @@
   let documents = [];
   let appointments = [];
   let invoices = [];
+  let payments = [];
   let messages = [];
 
   const serviceName = (id) => services.find((service) => service.id === id)?.name || 'LIW Service';
   const requestFor = (id) => requests.find((request) => request.id === id) || null;
+  const invoiceNumber = (invoice) => `INV-${String(invoice?.invoice_number || 0).padStart(6, '0')}`;
+  const paidForInvoice = (invoiceId) => payments.filter((payment) => payment.invoice_id === invoiceId && payment.status === 'succeeded').reduce((sum, payment) => sum + Number(payment.amount_cents || 0), 0);
+  const balanceForInvoice = (invoice) => Math.max(Number(invoice.total_cents || 0) - paidForInvoice(invoice.id), 0);
+  const canPayInvoice = (invoice) => balanceForInvoice(invoice) > 0 && ['sent', 'partial', 'overdue'].includes(invoice.status);
+
+  function showTab(target) {
+    const trigger = document.querySelector(`[data-bs-target="${target}"]`);
+    if (trigger && window.bootstrap) window.bootstrap.Tab.getOrCreateInstance(trigger).show();
+  }
 
   function renderStats() {
     document.getElementById('statRequests').textContent = requests.length;
     document.getElementById('statActive').textContent = requests.filter((item) => !['completed', 'closed'].includes(item.status)).length;
     document.getElementById('statAppointments').textContent = appointments.filter((item) => !['cancelled', 'completed', 'no_show'].includes(item.status)).length;
-    document.getElementById('statBalance').textContent = LIW.formatMoney(invoices.filter((invoice) => !['paid', 'void'].includes(invoice.status)).reduce((sum, invoice) => sum + Number(invoice.total_cents || 0), 0));
+    document.getElementById('statBalance').textContent = LIW.formatMoney(invoices.reduce((sum, invoice) => sum + (['paid', 'void'].includes(invoice.status) ? 0 : balanceForInvoice(invoice)), 0));
   }
 
   function renderRequests() {
     const body = document.getElementById('requestsTableBody');
     const empty = document.getElementById('requestsEmpty');
-    body.innerHTML = '';
     empty.classList.toggle('d-none', requests.length > 0);
-    if (!requests.length) return;
     body.innerHTML = requests.map((request) => `<tr><td class="fw-bold">${LIW.requestNumber(request.request_number)}</td><td>${LIW.escapeHtml(serviceName(request.service_id))}</td><td>${LIW.escapeHtml(request.subject)}</td><td>${LIW.statusBadge(request.status)}</td><td>${LIW.formatDate(request.created_at)}</td><td><button class="btn btn-sm btn-outline-liw" data-request-view="${request.id}">View</button></td></tr>`).join('');
   }
 
@@ -34,21 +42,25 @@
     const body = document.getElementById('documentsTableBody');
     const empty = document.getElementById('documentsEmpty');
     empty.classList.toggle('d-none', documents.length > 0);
-    body.innerHTML = documents.map((documentItem) => `<tr><td class="fw-semibold">${LIW.escapeHtml(documentItem.file_name)}</td><td>${LIW.escapeHtml(documentItem.category)}</td><td>${LIW.statusBadge(documentItem.status)}</td><td>${LIW.formatDate(documentItem.created_at)}</td><td><button class="btn btn-sm btn-outline-secondary" data-document-open="${documentItem.id}"><i class="bi bi-box-arrow-up-right"></i> Open</button></td></tr>`).join('');
+    body.innerHTML = documents.map((item) => `<tr><td class="fw-semibold">${LIW.escapeHtml(item.file_name)}</td><td>${LIW.escapeHtml(item.category)}</td><td>${LIW.statusBadge(item.status)}</td><td>${LIW.formatDate(item.created_at)}</td><td><button class="btn btn-sm btn-outline-secondary" data-document-open="${item.id}"><i class="bi bi-box-arrow-up-right"></i> Open</button></td></tr>`).join('');
   }
 
   function renderAppointments() {
     const body = document.getElementById('appointmentsTableBody');
     const empty = document.getElementById('appointmentsEmpty');
     empty.classList.toggle('d-none', appointments.length > 0);
-    body.innerHTML = appointments.map((appointment) => `<tr><td>${LIW.formatDate(appointment.starts_at, true)}</td><td>${LIW.escapeHtml(appointment.appointment_type.replaceAll('_', ' '))}</td><td>${LIW.escapeHtml(appointment.location || 'To be confirmed')}</td><td>${LIW.statusBadge(appointment.status)}</td></tr>`).join('');
+    body.innerHTML = appointments.map((appointment) => `<tr><td>${LIW.formatDate(appointment.starts_at, true)}</td><td class="text-capitalize">${LIW.escapeHtml(appointment.appointment_type.replaceAll('_', ' '))}</td><td>${LIW.escapeHtml(appointment.location || 'To be confirmed')}</td><td>${LIW.statusBadge(appointment.status)}</td></tr>`).join('');
   }
 
   function renderInvoices() {
     const body = document.getElementById('invoicesTableBody');
     const empty = document.getElementById('invoicesEmpty');
     empty.classList.toggle('d-none', invoices.length > 0);
-    body.innerHTML = invoices.map((invoice) => `<tr><td class="fw-bold">INV-${String(invoice.invoice_number || 0).padStart(6, '0')}</td><td>${LIW.formatMoney(invoice.total_cents)}</td><td>${LIW.statusBadge(invoice.status)}</td><td>${LIW.formatDate(invoice.due_date)}</td><td>${LIW.formatDate(invoice.created_at)}</td><td><button class="btn btn-sm btn-outline-liw" data-invoice-view="${invoice.id}">View</button></td></tr>`).join('');
+    body.innerHTML = invoices.map((invoice) => {
+      const balance = balanceForInvoice(invoice);
+      const payButton = canPayInvoice(invoice) ? `<button class="btn btn-sm btn-liw invoice-pay-button" data-invoice-pay="${invoice.id}"><i class="bi bi-lock-fill me-1"></i>Pay ${LIW.formatMoney(balance)}</button>` : '';
+      return `<tr><td class="fw-bold">${invoiceNumber(invoice)}</td><td>${LIW.formatMoney(invoice.total_cents)}</td><td class="fw-bold">${LIW.formatMoney(balance)}</td><td>${LIW.statusBadge(invoice.status)}</td><td>${LIW.formatDate(invoice.due_date)}</td><td class="text-nowrap"><button class="btn btn-sm btn-outline-liw me-1" data-invoice-view="${invoice.id}">View</button>${payButton}</td></tr>`;
+    }).join('');
   }
 
   function renderMessages() {
@@ -86,24 +98,20 @@
   async function loadDashboard() {
     LIW.setLoading(true, 'Loading your LIW portal…');
     try {
-      const [servicesResult, profileResult, requestsResult, appointmentsResult, invoicesResult, documentsResult, messagesResult] = await Promise.all([
+      const results = await Promise.all([
         LIW.db.from('service_catalog').select('id,name').eq('is_active', true).order('sort_order'),
         LIW.db.from('profiles').select('*').eq('id', user.id).maybeSingle(),
         LIW.db.from('service_requests').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
         LIW.db.from('appointments').select('*').eq('user_id', user.id).order('starts_at', { ascending: false }),
         LIW.db.from('invoices').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+        LIW.db.from('payments').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
         LIW.db.from('documents').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
         LIW.db.from('portal_messages').select('*').eq('user_id', user.id).order('created_at', { ascending: true })
       ]);
-      const firstError = [servicesResult, profileResult, requestsResult, appointmentsResult, invoicesResult, documentsResult, messagesResult].find((result) => result.error)?.error;
+      const firstError = results.find((result) => result.error)?.error;
       if (firstError) throw firstError;
-      services = servicesResult.data || [];
-      requests = requestsResult.data || [];
-      appointments = appointmentsResult.data || [];
-      invoices = invoicesResult.data || [];
-      documents = documentsResult.data || [];
-      messages = messagesResult.data || [];
-      renderProfile(profileResult.data);
+      [services, , requests, appointments, invoices, payments, documents, messages] = results.map((result) => result.data || []);
+      renderProfile(results[1].data);
       renderStats(); renderRequests(); renderDocuments(); renderAppointments(); renderInvoices(); renderMessages(); populateRequestSelectors();
     } catch (error) {
       console.error(error);
@@ -148,16 +156,14 @@
   async function sendClientMessage(event) {
     event.preventDefault();
     const form = event.currentTarget;
-    if (!form.request_id.value) return LIW.notify('warning', 'Choose a request', 'Select the LIW request connected to your message.');
+    if (!form.request_id.value) return LIW.notify('warning', 'Choose a request', 'Messages must be connected to a service request.');
     LIW.setLoading(true, 'Sending secure message…');
     const { error } = await LIW.db.from('portal_messages').insert({ request_id: form.request_id.value, user_id: user.id, sender_id: user.id, direction: 'customer_to_staff', subject: form.subject.value.trim(), body: form.body.value.trim() });
     LIW.setLoading(false);
-    if (error) return LIW.notify('error', 'Unable to send message', error.message);
+    if (error) return LIW.notify('error', 'Message not sent', error.message);
     form.subject.value = ''; form.body.value = '';
     LIW.toast('success', 'Message sent to LIW');
-    await loadDashboard();
-    const trigger = document.querySelector('[data-bs-target="#messagesPane"]');
-    if (trigger) window.bootstrap.Tab.getOrCreateInstance(trigger).show();
+    await loadDashboard(); showTab('#messagesPane');
   }
 
   async function markMessagesRead() {
@@ -168,6 +174,44 @@
     if (!error) { messages.forEach((message) => { if (ids.includes(message.id)) message.read_at = readAt; }); renderMessages(); }
   }
 
+  async function openRequest(requestId) {
+    const request = requests.find((item) => item.id === requestId);
+    if (!request) return;
+    const { data: notes } = await LIW.db.from('request_notes').select('note,created_at').eq('request_id', request.id).eq('visible_to_customer', true).order('created_at', { ascending: false });
+    const notesHtml = notes?.length ? notes.map((note) => `<div class="border rounded-3 p-2 mb-2"><small class="text-secondary">${LIW.formatDate(note.created_at, true)}</small><div>${LIW.escapeHtml(note.note)}</div></div>`).join('') : '<p class="text-muted mb-0">No customer updates yet.</p>';
+    await window.Swal.fire({ title: LIW.requestNumber(request.request_number), html: `<div class="text-start"><p><strong>Service:</strong> ${LIW.escapeHtml(serviceName(request.service_id))}</p><p><strong>Subject:</strong> ${LIW.escapeHtml(request.subject)}</p><p><strong>Status:</strong> ${LIW.statusBadge(request.status)}</p><hr>${LIW.detailRows(request.details)}<hr><h6>Updates from LIW</h6>${notesHtml}</div>`, width: 720, confirmButtonColor: '#263fa4' });
+  }
+
+  async function openDocument(documentId) {
+    const item = documents.find((documentItem) => documentItem.id === documentId);
+    if (!item) return;
+    LIW.setLoading(true, 'Opening document…');
+    const { data, error } = await LIW.db.storage.from('liw-documents').createSignedUrl(item.storage_path, 120);
+    LIW.setLoading(false);
+    if (error) return LIW.notify('error', 'Unable to open document', error.message);
+    window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
+  }
+
+  async function startInvoicePayment(invoiceId) {
+    const invoice = invoices.find((item) => item.id === invoiceId);
+    if (!invoice || !canPayInvoice(invoice)) return LIW.notify('info', 'No payment is due', 'This invoice does not currently have an online balance.');
+    LIW.setLoading(true, 'Opening secure Stripe checkout…');
+    try {
+      const { data, error } = await LIW.db.functions.invoke('create-invoice-checkout', { body: { invoice_id: invoiceId } });
+      if (error) {
+        let message = error.message || 'Stripe Checkout is not available.';
+        try { const payload = await error.context?.json(); message = payload?.error || payload?.message || message; } catch (_) { /* no-op */ }
+        throw new Error(message);
+      }
+      if (!data?.url) throw new Error(data?.error || 'Stripe Checkout did not return a payment page.');
+      window.location.assign(data.url);
+    } catch (error) {
+      console.error(error);
+      LIW.setLoading(false);
+      await LIW.notify('error', 'Unable to open payment', error.message || 'Please contact LIW for assistance.');
+    }
+  }
+
   async function openInvoice(invoiceId) {
     const invoice = invoices.find((item) => item.id === invoiceId);
     if (!invoice) return;
@@ -176,32 +220,39 @@
     LIW.setLoading(false);
     if (error) return LIW.notify('error', 'Unable to load invoice', error.message);
     const rows = (items || []).map((item) => `<tr><td>${LIW.escapeHtml(item.description)}</td><td>${item.quantity}</td><td>${LIW.formatMoney(item.unit_price_cents)}</td><td class="text-end">${LIW.formatMoney(item.line_total_cents)}</td></tr>`).join('');
-    window.Swal.fire({ title: `INV-${String(invoice.invoice_number || 0).padStart(6,'0')}`, html: `<div class="text-start"><div class="d-flex justify-content-between mb-3"><span>${LIW.statusBadge(invoice.status)}</span><strong class="fs-4">${LIW.formatMoney(invoice.total_cents)}</strong></div><div class="table-responsive"><table class="table"><thead><tr><th>Description</th><th>Qty</th><th>Rate</th><th class="text-end">Total</th></tr></thead><tbody>${rows}</tbody></table></div><dl class="detail-list"><dt>Subtotal</dt><dd>${LIW.formatMoney(invoice.subtotal_cents)}</dd><dt>Discount</dt><dd>${LIW.formatMoney(invoice.discount_cents)}</dd><dt>Tax / fees</dt><dd>${LIW.formatMoney(invoice.tax_cents)}</dd><dt>Due date</dt><dd>${LIW.formatDate(invoice.due_date)}</dd></dl>${invoice.notes ? `<hr><p>${LIW.escapeHtml(invoice.notes)}</p>` : ''}</div>`, width: 760, confirmButtonColor: '#263fa4' });
+    const invoicePayments = payments.filter((payment) => payment.invoice_id === invoiceId && payment.status === 'succeeded');
+    const paymentHtml = invoicePayments.length ? `<div class="payment-history-list">${invoicePayments.map((payment) => `<div class="payment-history-item"><span>${LIW.formatDate(payment.paid_at || payment.created_at, true)} · ${LIW.escapeHtml(payment.method)}</span><strong>${LIW.formatMoney(payment.amount_cents)}</strong></div>`).join('')}</div>` : '<p class="text-secondary">No successful payments recorded.</p>';
+    const balance = balanceForInvoice(invoice);
+    const result = await window.Swal.fire({ title: invoiceNumber(invoice), html: `<div class="text-start"><div class="d-flex justify-content-between align-items-center mb-3"><span>${LIW.statusBadge(invoice.status)}</span><div class="text-end"><small class="text-secondary d-block">Balance due</small><strong class="fs-3">${LIW.formatMoney(balance)}</strong></div></div><div class="table-responsive"><table class="table"><thead><tr><th>Description</th><th>Qty</th><th>Rate</th><th class="text-end">Total</th></tr></thead><tbody>${rows}</tbody></table></div><dl class="detail-list"><dt>Subtotal</dt><dd>${LIW.formatMoney(invoice.subtotal_cents)}</dd><dt>Discount</dt><dd>${LIW.formatMoney(invoice.discount_cents)}</dd><dt>Tax / fees</dt><dd>${LIW.formatMoney(invoice.tax_cents)}</dd><dt>Invoice total</dt><dd>${LIW.formatMoney(invoice.total_cents)}</dd><dt>Due date</dt><dd>${LIW.formatDate(invoice.due_date)}</dd></dl>${invoice.notes ? `<hr><p>${LIW.escapeHtml(invoice.notes)}</p>` : ''}<hr><h6>Payment history</h6>${paymentHtml}</div>`, width: 800, showCancelButton: canPayInvoice(invoice), confirmButtonText: canPayInvoice(invoice) ? `Pay ${LIW.formatMoney(balance)} securely` : 'Close', cancelButtonText: 'Close', confirmButtonColor: '#263fa4', reverseButtons: true });
+    if (canPayInvoice(invoice) && result.isConfirmed) await startInvoicePayment(invoiceId);
   }
 
-  async function handleTableClick(event) {
+  function handlePaymentReturn() {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get('payment');
+    if (!status) return;
+    const notice = document.getElementById('paymentNotice');
+    if (status === 'success') {
+      notice.className = 'payment-success-banner mb-4';
+      notice.innerHTML = '<strong><i class="bi bi-check-circle-fill me-1"></i>Payment submitted successfully.</strong><div>Your invoice status and receipt record will update automatically after Stripe confirms the payment.</div>';
+      showTab('#invoicesPane');
+    } else if (status === 'cancelled') {
+      notice.className = 'alert alert-warning mb-4';
+      notice.innerHTML = '<strong>Payment was not completed.</strong> Your invoice remains open and can be paid when you are ready.';
+      showTab('#invoicesPane');
+    }
+    history.replaceState({}, document.title, 'portal.html');
+  }
+
+  async function handleClick(event) {
     const requestButton = event.target.closest('[data-request-view]');
-    if (requestButton) {
-      const request = requestFor(requestButton.dataset.requestView);
-      if (!request) return;
-      const { data: notes } = await LIW.db.from('request_notes').select('note,created_at').eq('request_id', request.id).eq('visible_to_customer', true).order('created_at', { ascending: false });
-      const notesHtml = notes?.length ? notes.map((note) => `<div class="border rounded-3 p-2 mb-2"><small class="text-secondary">${LIW.formatDate(note.created_at, true)}</small><div>${LIW.escapeHtml(note.note)}</div></div>`).join('') : '<p class="text-muted mb-0">No customer updates yet.</p>';
-      window.Swal.fire({ title: LIW.requestNumber(request.request_number), html: `<div class="text-start"><p><strong>Service:</strong> ${LIW.escapeHtml(serviceName(request.service_id))}</p><p><strong>Subject:</strong> ${LIW.escapeHtml(request.subject)}</p><p><strong>Status:</strong> ${LIW.statusBadge(request.status)}</p><hr>${LIW.detailRows(request.details)}<hr><h6>Updates from LIW</h6>${notesHtml}</div>`, width: 680, confirmButtonColor: '#263fa4' });
-      return;
-    }
+    if (requestButton) return openRequest(requestButton.dataset.requestView);
     const documentButton = event.target.closest('[data-document-open]');
-    if (documentButton) {
-      const documentItem = documents.find((item) => item.id === documentButton.dataset.documentOpen);
-      if (!documentItem) return;
-      LIW.setLoading(true, 'Opening document…');
-      const { data, error } = await LIW.db.storage.from('liw-documents').createSignedUrl(documentItem.storage_path, 120);
-      LIW.setLoading(false);
-      if (error) return LIW.notify('error', 'Unable to open document', error.message);
-      window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
-      return;
-    }
-    const invoiceButton = event.target.closest('[data-invoice-view]');
-    if (invoiceButton) return openInvoice(invoiceButton.dataset.invoiceView);
+    if (documentButton) return openDocument(documentButton.dataset.documentOpen);
+    const invoiceView = event.target.closest('[data-invoice-view]');
+    if (invoiceView) return openInvoice(invoiceView.dataset.invoiceView);
+    const invoicePay = event.target.closest('[data-invoice-pay]');
+    if (invoicePay) return startInvoicePayment(invoicePay.dataset.invoicePay);
   }
 
   async function init() {
@@ -212,10 +263,11 @@
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
     document.getElementById('documentForm').addEventListener('submit', uploadDocument);
     document.getElementById('clientMessageForm').addEventListener('submit', sendClientMessage);
-    document.addEventListener('click', handleTableClick);
+    document.addEventListener('click', handleClick);
     document.querySelector('[data-bs-target="#messagesPane"]').addEventListener('shown.bs.tab', markMessagesRead);
-    document.querySelectorAll('[data-open-tab]').forEach((link) => link.addEventListener('click', (event) => { event.preventDefault(); const target = link.dataset.openTab; const trigger = document.querySelector(`[data-bs-target="${target}"]`); if (trigger && window.bootstrap) window.bootstrap.Tab.getOrCreateInstance(trigger).show(); document.querySelector(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+    document.querySelectorAll('[data-open-tab]').forEach((link) => link.addEventListener('click', (event) => { event.preventDefault(); showTab(link.dataset.openTab); document.querySelector(link.dataset.openTab)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
     await loadDashboard();
+    handlePaymentReturn();
   }
 
   document.addEventListener('DOMContentLoaded', init);

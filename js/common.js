@@ -113,15 +113,21 @@
   }
 
   function safeRedirectTarget(fallback = 'portal.html') {
-    const allowed = new Set(['portal.html', 'intake.html', 'admin.html', 'index.html']);
     const requested = new URLSearchParams(window.location.search).get('redirect');
-    return allowed.has(requested) ? requested : fallback;
+    if (!requested) return fallback;
+    const match = requested.match(/^(portal|intake|admin|index)\.html(?:\?service=([a-z0-9-]+))?$/);
+    if (!match) return fallback;
+    if (match[1] !== 'intake' && match[2]) return fallback;
+    const allowedServices = new Set(['real-estate','property-management','tax-preparation','credit-solutions','business-loans','business-advertising','web-design','eyeglasses-repair','digital-business-cards']);
+    if (match[2] && !allowedServices.has(match[2])) return fallback;
+    return requested;
   }
 
   async function requireAuth(options = {}) {
     const user = await getUser();
     if (!user) {
-      const current = window.location.pathname.split('/').pop() || 'portal.html';
+      const currentFile = window.location.pathname.split('/').pop() || 'portal.html';
+      const current = `${currentFile}${window.location.search || ''}`;
       window.location.replace(`login.html?redirect=${encodeURIComponent(current)}`);
       return null;
     }

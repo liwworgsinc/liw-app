@@ -1,51 +1,53 @@
-# LIW Worgs Inc. Client Platform — Premium Static Edition V2
+# LIW Worgs Inc. Web App V4
 
-A front-end application built with plain HTML, CSS, vanilla JavaScript, Bootstrap, Bootstrap Icons, SweetAlert2, Chart.js, and Supabase.
+A no-build HTML, CSS, and vanilla JavaScript business platform using Bootstrap, SweetAlert2, Chart.js, Supabase, and Stripe-hosted Checkout.
 
-## What is included
+## Public service journey
 
-- Premium public LIW website with expanded business messaging
-- Secure account registration, email confirmation, login, and password reset
-- Three-step smart service intake with service cards and request review
-- Customer portal for requests, documents, appointments, invoices, and profile information
-- Staff-only LIW Command Center
+Every service now has a dedicated information page before intake:
+
+- `real-estate.html`
+- `property-management.html`
+- `tax-preparation.html`
+- `credit-solutions.html`
+- `business-funding.html`
+- `business-advertising.html`
+- `web-design.html`
+- `eyeglasses-repair.html`
+- `digital-business-cards.html`
+
+Each page includes service information, a professional visual, preparation checklist, process, service-specific disclaimer, and a CTA that opens the correct preselected intake.
+
+## Client and staff features
+
+- Smart service intake
+- Customer and staff authentication
+- Secure document uploads
+- Appointment scheduling
+- Client portal messaging
+- Invoice creation with multiple line items
+- Stripe-hosted invoice payment
+- Payment history and invoice balance calculation
+- Staff Command Center and client workspaces
 - Terms of Use and Privacy Policy
-- Mobile-responsive design
-- Supabase authentication, database, storage, and Row Level Security integration
 
-## Deployment
+## Stripe
 
-Upload the contents of this folder to the root of the `liwworgsinc/liw-app` repository. GitHub Pages should use the `main` branch and `/(root)` folder.
+Read `STRIPE_SETUP.md`. The Supabase functions are:
+
+- `create-invoice-checkout`
+- `stripe-invoice-webhook`
+
+Stripe secrets stay in Supabase Edge Function secrets and are never stored in frontend files.
+
+## GitHub Pages
+
+Upload every file and folder to the root of `liwworgsinc/liw-app` and replace existing files. GitHub Pages should deploy from `main` and `/(root)`.
 
 Live URL:
 
-`https://liwworgsinc.github.io/liw-app/`
+```text
+https://liwworgsinc.github.io/liw-app/
+```
 
-## Supabase URL configuration
-
-Site URL:
-
-`https://liwworgsinc.github.io/liw-app/`
-
-Recommended redirect URLs:
-
-- `https://liwworgsinc.github.io/liw-app/portal.html`
-- `https://liwworgsinc.github.io/liw-app/reset-password.html`
-- `https://liwworgsinc.github.io/liw-app/login.html`
-- `https://liwworgsinc.github.io/liw-app/**`
-
-## Important
-
-Only the Supabase publishable key belongs in `js/config.js`. Never place a Supabase secret/service-role key, Stripe secret key, SMTP password, or other private credential in this repository.
-
-## Command Center V3 operations
-
-The admin client workspace now supports:
-
-- Private document review and signed file access
-- Appointment scheduling and status management
-- Multi-line invoice creation and client portal delivery
-- Secure staff-to-client messaging and client replies
-- Case notes and client-visible updates
-
-The live Supabase project already has the `command_center_operations` migration applied. The migration file is included for source control and future environments.
+After upload, use Ctrl + F5 to clear cached CSS and JavaScript.

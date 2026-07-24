@@ -65,7 +65,8 @@
       const password = form.password.value;
       const fullName = form.fullName.value.trim();
       const phone = form.phone.value.trim();
-      const redirectTo = new URL('portal.html', window.location.href).href;
+      const target = LIW.safeRedirectTarget('portal.html');
+      const redirectTo = new URL(target, window.location.href).href;
 
       const { data, error } = await db.auth.signUp({
         email,
@@ -78,14 +79,14 @@
       if (error) throw error;
 
       if (data.session) {
-        window.location.replace('intake.html');
+        window.location.replace(target);
         return;
       }
 
       form.reset();
       LIW.setLoading(false);
       await LIW.notify('success', 'Check your email', 'We sent a confirmation link. Open it to activate your LIW account.');
-      window.location.replace('login.html');
+      window.location.replace(`login.html?redirect=${encodeURIComponent(target)}`);
     } catch (error) {
       console.error(error);
       LIW.setLoading(false);
@@ -117,8 +118,19 @@
     return LIW.notify('success', 'Reset link sent', 'Check your inbox and spam folder.');
   }
 
+  function preserveRedirectLinks() {
+    const requested = new URLSearchParams(window.location.search).get('redirect');
+    if (!requested) return;
+    document.querySelectorAll('a[href="login.html"], a[href="register.html"]').forEach((link) => {
+      const url = new URL(link.getAttribute('href'), window.location.href);
+      url.searchParams.set('redirect', requested);
+      link.setAttribute('href', `${url.pathname.split('/').pop()}?${url.searchParams.toString()}`);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     if (!db) return;
+    preserveRedirectLinks();
     redirectSignedInUser();
     document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
     document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
