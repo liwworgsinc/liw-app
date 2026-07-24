@@ -37,3 +37,15 @@ Recommended redirect URLs:
 ## Important
 
 Only the Supabase publishable key belongs in `js/config.js`. Never place a Supabase secret/service-role key, Stripe secret key, SMTP password, or other private credential in this repository.
+
+## Command Center V3 operations
+
+The admin client workspace now supports:
+
+- Private document review and signed file access
+- Appointment scheduling and status management
+- Multi-line invoice creation and client portal delivery
+- Secure staff-to-client messaging and client replies
+- Case notes and client-visible updates
+
+The live Supabase project already has the `command_center_operations` migration applied. The migration file is included for source control and future environments.
