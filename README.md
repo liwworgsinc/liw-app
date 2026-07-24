@@ -1,54 +1,50 @@
-# LIW Worgs Inc. Platform
+# LIW Worgs Inc. Static Web App
 
-Version 1 of the LIW Command Center: a React, TypeScript, Vite, and Supabase customer portal and smart intake system.
+A no-build web application using plain HTML, CSS, JavaScript, Bootstrap, SweetAlert2, Chart.js, and Supabase.
 
-## Included
+## Included pages
 
-- Public LIW Worgs service landing page
-- Customer account creation and sign-in
-- Dynamic service intake forms backed by Supabase
-- Customer request dashboard
-- Profile management
-- Staff/owner role detection
-- Secure Postgres schema with Row Level Security
-- Private Supabase Storage bucket for future document uploads
-- Mobile-friendly layout
+- `index.html` — public website and service catalog
+- `login.html` — customer/staff login
+- `register.html` — customer registration
+- `reset-password.html` — secure password reset
+- `intake.html` — dynamic service intake
+- `portal.html` — customer portal, requests, documents, appointments, invoices, and profile
+- `admin.html` — LIW staff CRM and request pipeline
 
-## Local setup
+## Deploy by FTP
 
-```bash
-npm install
-cp .env.example .env.local
-npm run dev
-```
+Upload every file and folder in this package to the website document root. Keep the folder structure intact.
 
-Set these values in `.env.local`:
+## Deploy with GitHub Pages
 
-```env
-VITE_SUPABASE_URL=https://svoiyvwwvrmixnqtltlu.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
-```
+1. Upload these files to the root of the `liw-app` repository.
+2. In GitHub, open **Settings → Pages**.
+3. Set **Source** to **Deploy from a branch**.
+4. Select **main** and **/(root)**, then save.
+5. Wait for the green deployment check.
 
-## Supabase
+No npm install, build command, or React setup is required.
 
-The migration in `supabase/migrations/20260724010000_initial_liw_platform.sql` documents the project schema. The production migration was applied directly to the connected Supabase project.
+## Supabase settings
 
-The email `liwworgsinc@gmail.com` is automatically assigned the `owner` role when that account signs up.
+The publishable key and project URL are in `js/config.js`. The publishable key is intended for browser use. Access is protected by Supabase Auth and Row Level Security.
 
-## Production reminders
+For registration email links, add the final website address in Supabase:
 
-- Configure the Supabase Auth Site URL and redirect URLs for the deployed domain.
-- Keep all secret and service-role keys out of frontend code.
-- Add Stripe through a Supabase Edge Function and webhook, not directly in the browser.
-- Add document upload screens only through the private `liw-documents` bucket.
+**Authentication → URL Configuration → Site URL / Redirect URLs**
 
-## Shared-hosting / FTP deployment
+Example GitHub Pages redirect:
 
-This ZIP contains source code. Do not upload the source folder as the public website.
+`https://liwworgsinc.github.io/liw-app/**`
 
-1. Run `npm install`.
-2. Create `.env.local` from `.env.example` and add your Supabase publishable key.
-3. Run `npm run build`.
-4. Upload the **contents of the generated `dist` folder** to your website's public folder.
+## First owner account
 
-For Netlify, Vercel, or Cloudflare Pages, connect the project and use `npm run build` with `dist` as the output directory.
+Register using `liwworgsinc@gmail.com`. The database trigger assigns that email the `owner` role.
+
+## Legal pages
+
+- `terms.html` — Terms of Use
+- `privacy.html` — Privacy Policy
+
+Business phone: 929-234-2881

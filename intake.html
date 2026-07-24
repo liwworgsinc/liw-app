@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#151955">
+  <title>Start a Service Request | LIW Worgs Inc.</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/app.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg liw-navbar"><div class="container"><a class="navbar-brand liw-brand" href="index.html"><img src="assets/liw-worgs-logo.png" alt="LIW Worgs Inc."></a><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse" id="mainNav"><ul class="navbar-nav ms-auto align-items-lg-center"><li class="nav-item"><a class="nav-link" href="portal.html">My Portal</a></li><li class="nav-item d-none" data-auth="staff"><a class="nav-link" href="admin.html">Command Center</a></li><li class="nav-item"><button class="btn btn-outline-liw ms-lg-2" type="button" data-signout>Sign Out</button></li></ul></div></div></nav>
+  <header class="page-header"><div class="container"><span class="text-uppercase small fw-bold text-warning">Smart Intake</span><h1 class="fw-bold mt-2">Start a new LIW service request</h1><p>Signed in as <span data-intake-email></span>. Select a service and answer the questions below.</p></div></header>
+  <main class="dashboard-wrap"><div class="container"><div class="row justify-content-center"><div class="col-xl-9"><div class="liw-card p-4 p-lg-5">
+    <form id="intakeForm">
+      <div class="row g-4">
+        <div class="col-md-7"><label class="form-label" for="serviceSelect">Which service do you need?</label><select class="form-select" id="serviceSelect" name="service_id" required><option value="">Loading services…</option></select><div class="form-text" id="serviceDescription"></div></div>
+        <div class="col-md-5"><label class="form-label" for="subject">Short request title</label><input class="form-control" id="subject" name="subject" placeholder="Optional"></div>
+      </div>
+      <hr class="my-4">
+      <div class="row g-4" id="dynamicFields"><div class="col-12"><p class="text-muted mb-0">Select a service to continue.</p></div></div>
+      <hr class="my-4">
+      <h2 class="h5 fw-bold">Contact preferences</h2>
+      <div class="row g-4 mt-0"><div class="col-md-6"><label class="form-label" for="preferredContact">Preferred contact method</label><select class="form-select" id="preferredContact" name="preferred_contact" required><option value="phone">Phone</option><option value="text">Text message</option><option value="email">Email</option></select></div><div class="col-md-6"><label class="form-label" for="bestContactTime">Best time to contact you</label><input class="form-control" id="bestContactTime" name="best_contact_time" placeholder="Example: Weekdays after 5 PM" required></div></div>
+      <div class="alert alert-light border mt-4"><i class="bi bi-shield-lock me-2"></i>Your request is stored in your secure account. You can upload supporting documents after submission.</div>
+      <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mt-4"><a class="btn btn-outline-secondary btn-lg" href="portal.html">Cancel</a><button class="btn btn-liw btn-lg px-5" type="submit">Submit Request</button></div>
+    </form>
+  </div></div></div></div></main>
+  <div class="loading-overlay" id="loadingOverlay"><div class="loading-box"><div class="spinner-border text-primary"></div><strong data-loading-message>Working…</strong></div></div>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script defer src="js/config.js"></script><script defer src="js/common.js"></script><script defer src="js/intake.js"></script>
+</body>
+</html>

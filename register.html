@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#151955">
+  <title>Create Account | LIW Worgs Inc.</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/app.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar liw-navbar"><div class="container"><a class="navbar-brand liw-brand" href="index.html"><img src="assets/liw-worgs-logo.png" alt="LIW Worgs Inc."></a><a class="btn btn-outline-liw" href="login.html">Sign In</a></div></nav>
+  <main class="auth-shell">
+    <div class="container"><div class="liw-card auth-card mx-auto">
+      <img class="auth-logo" src="assets/liw-worgs-logo.png" alt="LIW Worgs Inc.">
+      <div class="text-center mb-4"><h1 class="h3 fw-bold">Create your account</h1><p class="text-secondary">One login for every LIW service.</p></div>
+      <form id="registerForm" novalidate>
+        <div class="mb-3"><label class="form-label" for="fullName">Full name</label><input class="form-control" id="fullName" name="fullName" autocomplete="name" required></div>
+        <div class="mb-3"><label class="form-label" for="phone">Phone number</label><input class="form-control" id="phone" name="phone" type="tel" autocomplete="tel" required></div>
+        <div class="mb-3"><label class="form-label" for="email">Email address</label><input class="form-control" id="email" name="email" type="email" autocomplete="email" required></div>
+        <div class="row g-3 mb-4"><div class="col-md-6"><label class="form-label" for="password">Password</label><input class="form-control" id="password" name="password" type="password" autocomplete="new-password" minlength="8" required></div><div class="col-md-6"><label class="form-label" for="confirmPassword">Confirm password</label><input class="form-control" id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div></div>
+        <button class="btn btn-liw btn-lg w-100" type="submit">Create Account</button>
+        <p class="small text-secondary mt-3 mb-0">By creating an account, you agree to provide accurate information, use the portal only for legitimate LIW service requests, and accept our <a href="terms.html">Terms of Use</a> and <a href="privacy.html">Privacy Policy</a>.</p>
+      </form>
+      <p class="text-center text-secondary mt-4 mb-0">Already registered? <a class="fw-bold" href="login.html">Sign in</a></p>
+    </div></div>
+  </main>
+  <div class="loading-overlay" id="loadingOverlay"><div class="loading-box"><div class="spinner-border text-primary"></div><strong data-loading-message>Working…</strong></div></div>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/config.js"></script><script defer src="js/common.js"></script><script defer src="js/auth.js"></script>
+</body>
+</html>
