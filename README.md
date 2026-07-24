@@ -31,7 +31,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
 
 ## Supabase
 
-The migration in `supabase/migrations/202607230001_initial_liw_platform.sql` documents the project schema. The production migration was applied directly to the connected Supabase project.
+The migration in `supabase/migrations/20260724010000_initial_liw_platform.sql` documents the project schema. The production migration was applied directly to the connected Supabase project.
 
 The email `liwworgsinc@gmail.com` is automatically assigned the `owner` role when that account signs up.
 
@@ -41,3 +41,14 @@ The email `liwworgsinc@gmail.com` is automatically assigned the `owner` role whe
 - Keep all secret and service-role keys out of frontend code.
 - Add Stripe through a Supabase Edge Function and webhook, not directly in the browser.
 - Add document upload screens only through the private `liw-documents` bucket.
+
+## Shared-hosting / FTP deployment
+
+This ZIP contains source code. Do not upload the source folder as the public website.
+
+1. Run `npm install`.
+2. Create `.env.local` from `.env.example` and add your Supabase publishable key.
+3. Run `npm run build`.
+4. Upload the **contents of the generated `dist` folder** to your website's public folder.
+
+For Netlify, Vercel, or Cloudflare Pages, connect the project and use `npm run build` with `dist` as the output directory.
