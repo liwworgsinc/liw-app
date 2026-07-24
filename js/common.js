@@ -63,11 +63,16 @@
     const messageNode = overlay.querySelector('[data-loading-message]');
     if (messageNode) messageNode.textContent = message;
     overlay.classList.toggle('show', Boolean(show));
+    overlay.setAttribute('aria-hidden', show ? 'false' : 'true');
+    document.body.classList.toggle('is-loading', Boolean(show));
   }
 
   function notify(icon, title, text = '') {
+    // Always remove the full-screen loading layer before opening a dialog.
+    // The loading layer uses a high z-index and can otherwise block SweetAlert buttons.
+    setLoading(false);
     if (window.Swal) {
-      return window.Swal.fire({ icon, title, text, confirmButtonColor: '#2b3f9f' });
+      return window.Swal.fire({ icon, title, text, confirmButtonColor: '#263fa4' });
     }
     window.alert([title, text].filter(Boolean).join('\n'));
     return Promise.resolve();

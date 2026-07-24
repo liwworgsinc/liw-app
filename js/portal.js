@@ -211,7 +211,7 @@
           <hr><h6>Updates from LIW</h6>${notesHtml}
         </div>`,
         width: 680,
-        confirmButtonColor: '#2b3f9f'
+        confirmButtonColor: '#263fa4'
       });
       return;
     }
@@ -237,6 +237,13 @@
     document.getElementById('profileForm').addEventListener('submit', saveProfile);
     document.getElementById('documentForm').addEventListener('submit', uploadDocument);
     document.addEventListener('click', handleTableClick);
+    document.querySelectorAll('[data-open-tab]').forEach((link) => link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = link.dataset.openTab;
+      const trigger = document.querySelector(`[data-bs-target="${target}"]`);
+      if (trigger && window.bootstrap) window.bootstrap.Tab.getOrCreateInstance(trigger).show();
+      document.querySelector(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
     await loadDashboard();
   }
 

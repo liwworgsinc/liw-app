@@ -35,7 +35,7 @@
           <div class="service-icon mb-3"><i class="bi ${iconMap[service.icon] || 'bi-briefcase'}"></i></div>
           <h3 class="h5 fw-bold">${window.LIW.escapeHtml(service.name)}</h3>
           <p class="text-secondary">${window.LIW.escapeHtml(service.short_description)}</p>
-          <a class="fw-bold text-decoration-none" href="intake.html?service=${encodeURIComponent(service.code)}">
+          <a class="service-link" href="intake.html?service=${encodeURIComponent(service.code)}">
             Start request <i class="bi bi-arrow-right"></i>
           </a>
         </article>

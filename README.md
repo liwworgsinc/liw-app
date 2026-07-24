@@ -1,50 +1,39 @@
-# LIW Worgs Inc. Static Web App
+# LIW Worgs Inc. Client Platform — Premium Static Edition V2
 
-A no-build web application using plain HTML, CSS, JavaScript, Bootstrap, SweetAlert2, Chart.js, and Supabase.
+A front-end application built with plain HTML, CSS, vanilla JavaScript, Bootstrap, Bootstrap Icons, SweetAlert2, Chart.js, and Supabase.
 
-## Included pages
+## What is included
 
-- `index.html` — public website and service catalog
-- `login.html` — customer/staff login
-- `register.html` — customer registration
-- `reset-password.html` — secure password reset
-- `intake.html` — dynamic service intake
-- `portal.html` — customer portal, requests, documents, appointments, invoices, and profile
-- `admin.html` — LIW staff CRM and request pipeline
+- Premium public LIW website with expanded business messaging
+- Secure account registration, email confirmation, login, and password reset
+- Three-step smart service intake with service cards and request review
+- Customer portal for requests, documents, appointments, invoices, and profile information
+- Staff-only LIW Command Center
+- Terms of Use and Privacy Policy
+- Mobile-responsive design
+- Supabase authentication, database, storage, and Row Level Security integration
 
-## Deploy by FTP
+## Deployment
 
-Upload every file and folder in this package to the website document root. Keep the folder structure intact.
+Upload the contents of this folder to the root of the `liwworgsinc/liw-app` repository. GitHub Pages should use the `main` branch and `/(root)` folder.
 
-## Deploy with GitHub Pages
+Live URL:
 
-1. Upload these files to the root of the `liw-app` repository.
-2. In GitHub, open **Settings → Pages**.
-3. Set **Source** to **Deploy from a branch**.
-4. Select **main** and **/(root)**, then save.
-5. Wait for the green deployment check.
+`https://liwworgsinc.github.io/liw-app/`
 
-No npm install, build command, or React setup is required.
+## Supabase URL configuration
 
-## Supabase settings
+Site URL:
 
-The publishable key and project URL are in `js/config.js`. The publishable key is intended for browser use. Access is protected by Supabase Auth and Row Level Security.
+`https://liwworgsinc.github.io/liw-app/`
 
-For registration email links, add the final website address in Supabase:
+Recommended redirect URLs:
 
-**Authentication → URL Configuration → Site URL / Redirect URLs**
+- `https://liwworgsinc.github.io/liw-app/portal.html`
+- `https://liwworgsinc.github.io/liw-app/reset-password.html`
+- `https://liwworgsinc.github.io/liw-app/login.html`
+- `https://liwworgsinc.github.io/liw-app/**`
 
-Example GitHub Pages redirect:
+## Important
 
-`https://liwworgsinc.github.io/liw-app/**`
-
-## First owner account
-
-Register using `liwworgsinc@gmail.com`. The database trigger assigns that email the `owner` role.
-
-## Legal pages
-
-- `terms.html` — Terms of Use
-- `privacy.html` — Privacy Policy
-
-Business phone: 929-234-2881
+Only the Supabase publishable key belongs in `js/config.js`. Never place a Supabase secret/service-role key, Stripe secret key, SMTP password, or other private credential in this repository.

@@ -139,7 +139,7 @@
       inputAttributes: { 'aria-label': 'Request note' },
       showCancelButton: true,
       confirmButtonText: 'Save note',
-      confirmButtonColor: '#2b3f9f',
+      confirmButtonColor: '#263fa4',
       inputValidator: (value) => !value.trim() ? 'Enter a note.' : undefined,
       footer: '<small>Customer visibility can be selected after you continue.</small>'
     });
@@ -150,7 +150,7 @@
       showCancelButton: true,
       confirmButtonText: 'Yes, customer can see it',
       cancelButtonText: 'No, internal only',
-      confirmButtonColor: '#2b3f9f'
+      confirmButtonColor: '#263fa4'
     });
     LIW.setLoading(true, 'Saving note…');
     const { error } = await LIW.db.from('request_notes').insert({
@@ -186,7 +186,7 @@
         <hr><h6>Notes</h6>${notesHtml}
       </div>`,
       width: 760,
-      confirmButtonColor: '#2b3f9f'
+      confirmButtonColor: '#263fa4'
     });
   }
 

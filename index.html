@@ -3,105 +3,158 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#151955">
-  <meta name="description" content="LIW Worgs Inc. connects clients with real estate, property management, tax, credit, advertising, web, and optical services.">
-  <title>LIW Worgs Inc. | Business & Client Solutions</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <meta name="theme-color" content="#080c27">
+  <meta name="description" content="LIW Worgs Inc. provides an organized client experience for real estate, property management, tax preparation, credit solutions, business funding, advertising, web design, optical repair, and digital business cards.">
+  <title>LIW Worgs Inc. | Connected Business & Client Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/app.css" rel="stylesheet">
 </head>
 <body>
+  <div class="liw-topbar">
+    <div class="container liw-topbar-inner">
+      <span><i class="bi bi-geo-alt me-1"></i> 873 Liberty Ave, Brooklyn, NY 11208</span>
+      <span class="d-flex gap-4"><a href="tel:+19292342881"><i class="bi bi-telephone me-1"></i>929-234-2881</a><a href="mailto:liwworgsinc@gmail.com"><i class="bi bi-envelope me-1"></i>liwworgsinc@gmail.com</a></span>
+    </div>
+  </div>
+
   <nav class="navbar navbar-expand-lg liw-navbar">
     <div class="container">
       <a class="navbar-brand liw-brand" href="index.html"><img src="assets/liw-worgs-logo.png" alt="LIW Worgs Inc."></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
           <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-          <li class="nav-item"><a class="nav-link" href="#how-it-works">How It Works</a></li>
+          <li class="nav-item"><a class="nav-link" href="#standards">Our Standard</a></li>
+          <li class="nav-item"><a class="nav-link" href="#process">Process</a></li>
           <li class="nav-item d-none" data-auth="staff"><a class="nav-link" href="admin.html">Command Center</a></li>
           <li class="nav-item" data-auth="guest"><a class="nav-link" href="login.html">Sign In</a></li>
           <li class="nav-item d-none" data-auth="user"><a class="nav-link" href="portal.html">My Portal</a></li>
-          <li class="nav-item" data-auth="guest"><a class="btn btn-liw ms-lg-2" href="register.html">Create Account</a></li>
+          <li class="nav-item" data-auth="guest"><a class="btn btn-liw ms-lg-2 px-3" href="register.html">Create Account</a></li>
           <li class="nav-item d-none" data-auth="user"><button class="btn btn-outline-liw ms-lg-2" type="button" data-signout>Sign Out</button></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <header class="hero">
+  <header class="hero-premium">
     <div class="container">
       <div class="row align-items-center g-5">
         <div class="col-lg-7">
-          <div class="hero-kicker mb-3">One company. Connected solutions.</div>
-          <h1>Move your goals forward with LIW Worgs.</h1>
-          <p class="my-4">Start a service request, upload documents securely, track progress, and manage your relationship with LIW Worgs Inc. from one easy portal.</p>
-          <div class="d-flex flex-wrap gap-3">
-            <a class="btn btn-light btn-lg fw-bold px-4" href="intake.html">Start a Request</a>
-            <a class="btn btn-outline-light btn-lg fw-bold px-4" href="portal.html">Open Client Portal</a>
+          <div class="hero-kicker"><i class="bi bi-buildings"></i> Brooklyn-based. Built for serious work.</div>
+          <h1>One relationship.<br><span>Multiple solutions.</span></h1>
+          <p class="lead-copy">LIW Worgs Inc. brings essential personal and business services into one organized client experience. Submit the right information, keep documents connected, follow your progress, and communicate with a team that treats every request like important business.</p>
+          <div class="d-flex flex-wrap gap-3 mt-4">
+            <a class="btn btn-gold btn-lg px-4" href="intake.html">Start a Service Request <i class="bi bi-arrow-right ms-1"></i></a>
+            <a class="btn btn-outline-light btn-lg px-4" href="portal.html">Open Client Portal</a>
           </div>
-          <div class="d-flex flex-wrap gap-4 mt-4 small text-white-50">
-            <span><i class="bi bi-shield-check me-1"></i> Secure customer accounts</span>
-            <span><i class="bi bi-phone me-1"></i> Mobile friendly</span>
-            <span><i class="bi bi-clock-history me-1"></i> Track your progress</span>
+          <div class="hero-trust-row">
+            <span><i class="bi bi-shield-lock-fill me-1"></i>Private client accounts</span>
+            <span><i class="bi bi-folder-check me-1"></i>Organized document handling</span>
+            <span><i class="bi bi-diagram-3 me-1"></i>Clear service workflow</span>
           </div>
         </div>
         <div class="col-lg-5">
-          <div class="hero-panel">
-            <h2 class="h4 fw-bold">LIW Client Command Center</h2>
-            <p class="mb-4">A better way to organize your services, documents, appointments, and payments.</p>
-            <div class="row g-3">
-              <div class="col-6"><div class="mini-stat"><strong>9</strong><span>Service areas</span></div></div>
-              <div class="col-6"><div class="mini-stat"><strong>1</strong><span>Connected portal</span></div></div>
-              <div class="col-6"><div class="mini-stat"><strong>24/7</strong><span>Request access</span></div></div>
-              <div class="col-6"><div class="mini-stat"><strong>Secure</strong><span>Document storage</span></div></div>
+          <div class="command-preview">
+            <div class="command-window">
+              <div class="command-header"><div class="command-dots"><span></span><span></span><span></span></div><small class="fw-bold text-secondary">LIW CLIENT CENTER</small><i class="bi bi-shield-check text-success"></i></div>
+              <div class="command-body">
+                <div class="command-welcome"><small class="text-white-50">Your organized service hub</small><h2 class="h4 fw-bold mb-1">Everything connected.</h2><p class="small mb-0 text-white-50">Requests, documents, appointments, invoices, and updates.</p></div>
+                <div class="command-grid">
+                  <div class="command-tile"><i class="bi bi-clipboard2-check"></i><strong>Smart Intake</strong><small>Questions matched to your service</small></div>
+                  <div class="command-tile"><i class="bi bi-folder2-open"></i><strong>Secure Files</strong><small>Documents tied to your request</small></div>
+                  <div class="command-tile"><i class="bi bi-activity"></i><strong>Live Status</strong><small>Know the current stage</small></div>
+                  <div class="command-tile"><i class="bi bi-receipt"></i><strong>Account Records</strong><small>Appointments and invoices</small></div>
+                </div>
+              </div>
             </div>
+            <div class="floating-proof"><i class="bi bi-patch-check-fill"></i><div><strong class="d-block">Professional intake</strong><small class="text-secondary">Less confusion. Better follow-through.</small></div></div>
           </div>
         </div>
       </div>
     </div>
   </header>
 
-  <main>
-    <section class="section-pad" id="services">
-      <div class="container">
-        <div class="text-center mb-5">
-          <span class="text-uppercase fw-bold text-primary small">What we do</span>
-          <h2 class="section-title display-6 mt-2">Services built around real needs</h2>
-          <p class="section-subtitle mx-auto">Choose a service and complete one organized intake. Your request goes directly into the LIW management system.</p>
-        </div>
-        <div class="row g-4" id="servicesGrid">
-          <div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading services…</span></div></div>
-        </div>
+  <div class="proof-strip">
+    <div class="container">
+      <div class="proof-panel">
+        <div class="proof-item"><i class="bi bi-briefcase-fill"></i><strong>9 connected service areas</strong><small>One company relationship</small></div>
+        <div class="proof-item"><i class="bi bi-person-lock"></i><strong>Private client access</strong><small>Your records stay with your account</small></div>
+        <div class="proof-item"><i class="bi bi-phone"></i><strong>Built for mobile</strong><small>Start and track work from anywhere</small></div>
+        <div class="proof-item"><i class="bi bi-geo-alt-fill"></i><strong>Brooklyn business presence</strong><small>873 Liberty Avenue</small></div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section class="section-pad bg-white" id="how-it-works">
+  <main>
+    <section class="section-pad" id="standards">
       <div class="container">
-        <div class="row align-items-end mb-4 g-3">
-          <div class="col-lg-7">
-            <span class="text-uppercase fw-bold text-primary small">Simple process</span>
-            <h2 class="section-title display-6 mt-2">From request to completion</h2>
-          </div>
-          <div class="col-lg-5"><p class="section-subtitle mb-0">No scattered emails or lost messages. Everything stays connected to your account.</p></div>
+        <div class="row align-items-end g-4 mb-5">
+          <div class="col-lg-7"><span class="eyebrow">The LIW standard</span><h2 class="section-title display-5 mt-3">Important work deserves an organized experience.</h2></div>
+          <div class="col-lg-5"><p class="section-subtitle mb-0">We designed the LIW process to replace scattered texts, missing paperwork, and unclear next steps with a structured client record from the first request forward.</p></div>
         </div>
         <div class="row g-4">
-          <div class="col-md-6 col-xl-3"><div class="liw-card process-step h-100"><div class="step-number mb-3">1</div><h3 class="h5 fw-bold">Create an account</h3><p class="text-secondary mb-0">Register once and use the same login for every LIW service.</p></div></div>
-          <div class="col-md-6 col-xl-3"><div class="liw-card process-step h-100"><div class="step-number mb-3">2</div><h3 class="h5 fw-bold">Submit your request</h3><p class="text-secondary mb-0">Answer service-specific questions so our team understands what you need.</p></div></div>
-          <div class="col-md-6 col-xl-3"><div class="liw-card process-step h-100"><div class="step-number mb-3">3</div><h3 class="h5 fw-bold">Upload documents</h3><p class="text-secondary mb-0">Send required files through your private customer portal.</p></div></div>
-          <div class="col-md-6 col-xl-3"><div class="liw-card process-step h-100"><div class="step-number mb-3">4</div><h3 class="h5 fw-bold">Track progress</h3><p class="text-secondary mb-0">See statuses, appointments, invoices, and completed work in one place.</p></div></div>
+          <div class="col-md-6 col-xl-3"><article class="liw-card standard-card"><div class="standard-icon mb-3"><i class="bi bi-ui-checks-grid"></i></div><h3 class="h5 fw-bold">Structured intake</h3><p class="text-secondary mb-0">Each service asks focused questions so the team begins with the information that matters.</p></article></div>
+          <div class="col-md-6 col-xl-3"><article class="liw-card standard-card"><div class="standard-icon mb-3"><i class="bi bi-shield-lock"></i></div><h3 class="h5 fw-bold">Account-based records</h3><p class="text-secondary mb-0">Requests, documents, notes, appointments, and invoices remain connected to your account.</p></article></div>
+          <div class="col-md-6 col-xl-3"><article class="liw-card standard-card"><div class="standard-icon mb-3"><i class="bi bi-signpost-split"></i></div><h3 class="h5 fw-bold">Visible next steps</h3><p class="text-secondary mb-0">Track whether your request is submitted, under review, awaiting documents, in progress, or complete.</p></article></div>
+          <div class="col-md-6 col-xl-3"><article class="liw-card standard-card"><div class="standard-icon mb-3"><i class="bi bi-headset"></i></div><h3 class="h5 fw-bold">Direct client support</h3><p class="text-secondary mb-0">Reach LIW by phone, text, or email using the contact preference saved to your profile.</p></article></div>
         </div>
       </div>
     </section>
 
-    <section class="section-pad">
+    <section class="section-pad bg-white" id="services">
       <div class="container">
-        <div class="liw-card p-4 p-lg-5 text-center">
-          <h2 class="section-title">Ready to get started?</h2>
-          <p class="section-subtitle mx-auto mb-4">Tell us which service you need. The smart intake will guide you through the correct questions.</p>
-          <a class="btn btn-liw btn-lg px-5" href="intake.html">Start Your Request</a>
+        <div class="text-center mb-5">
+          <span class="eyebrow">Connected services</span>
+          <h2 class="section-title display-5 mt-3">Solutions for business, property, finances, and everyday needs.</h2>
+          <p class="section-subtitle mx-auto">Choose the service that best matches your goal. The LIW intake system will guide you through the correct questions and place your request in the appropriate workflow.</p>
+        </div>
+        <div class="row g-4" id="servicesGrid"><div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading services…</span></div></div></div>
+      </div>
+    </section>
+
+    <section class="section-pad" id="process">
+      <div class="container">
+        <div class="row g-5 align-items-center">
+          <div class="col-lg-6">
+            <span class="eyebrow">What happens next</span>
+            <h2 class="section-title display-5 mt-3">A clear path from first contact to completed work.</h2>
+            <div class="process-line mt-4">
+              <div class="process-item"><div class="process-number">1</div><div><h3 class="h5 fw-bold mb-1">Tell us what you need</h3><p class="text-secondary mb-0">Select a service and complete the guided intake with your goal, timing, and contact preference.</p></div></div>
+              <div class="process-item"><div class="process-number">2</div><div><h3 class="h5 fw-bold mb-1">LIW reviews the request</h3><p class="text-secondary mb-0">Your request enters the management system so the team can confirm requirements and next steps.</p></div></div>
+              <div class="process-item"><div class="process-number">3</div><div><h3 class="h5 fw-bold mb-1">Complete the action items</h3><p class="text-secondary mb-0">Upload requested documents, attend appointments, and review invoices from your portal.</p></div></div>
+              <div class="process-item"><div class="process-number">4</div><div><h3 class="h5 fw-bold mb-1">Track the work</h3><p class="text-secondary mb-0">Return to your account to see status changes and keep a record of your LIW services.</p></div></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="experience-panel">
+              <span class="text-uppercase small fw-bold text-warning">Built for confidence</span>
+              <h3 class="display-title display-6 text-white mt-2">Clients should never wonder what happened to their request.</h3>
+              <p class="text-white-50">The LIW portal gives every client a professional home base instead of relying only on scattered calls, texts, and email threads.</p>
+              <ul class="experience-list">
+                <li><i class="bi bi-check-circle-fill"></i><span>A confirmation number for every submitted request</span></li>
+                <li><i class="bi bi-check-circle-fill"></i><span>Documents connected to the correct service record</span></li>
+                <li><i class="bi bi-check-circle-fill"></i><span>Appointment, invoice, and status visibility</span></li>
+                <li><i class="bi bi-check-circle-fill"></i><span>One account that can support multiple LIW services</span></li>
+              </ul>
+              <a class="btn btn-gold mt-3" href="register.html">Create Your Client Account</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad pt-0">
+      <div class="container">
+        <div class="cta-panel">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-8"><span class="text-uppercase small fw-bold text-warning">Ready when you are</span><h2 class="display-title display-5 text-white mt-2 mb-2">Bring your next important request to LIW Worgs.</h2><p class="text-white-50 mb-0">Start online, receive a confirmation number, and continue the relationship through your secure client portal.</p></div>
+            <div class="col-lg-4 text-lg-end"><a class="btn btn-gold btn-lg px-4" href="intake.html">Start Now <i class="bi bi-arrow-up-right ms-1"></i></a><div class="small text-white-50 mt-2">Questions? Call 929-234-2881</div></div>
+          </div>
         </div>
       </div>
     </section>
@@ -109,16 +162,16 @@
 
   <footer class="liw-footer">
     <div class="container">
-      <div class="row g-4 align-items-start">
-        <div class="col-lg-5"><img class="footer-logo mb-3" src="assets/liw-worgs-logo.png" alt="LIW Worgs Inc."><p>Empowering your business and personal goals with connected, tailored solutions.</p></div>
-        <div class="col-sm-6 col-lg-3"><h3 class="h6 text-white fw-bold">Contact</h3><p class="mb-1"><i class="bi bi-geo-alt me-2"></i>873 Liberty Ave<br><span class="ms-4">Brooklyn, NY 11208</span></p><p class="mb-1"><i class="bi bi-telephone me-2"></i><a href="tel:+19292342881">929-234-2881</a></p><p><i class="bi bi-envelope me-2"></i><a href="mailto:liwworgsinc@gmail.com">liwworgsinc@gmail.com</a></p></div>
-        <div class="col-sm-6 col-lg-4"><h3 class="h6 text-white fw-bold">Client Access</h3><p><a href="register.html">Create an account</a><br><a href="login.html">Sign in</a><br><a href="portal.html">Client portal</a><br><a href="intake.html">Start a request</a></p></div>
+      <div class="row g-5 align-items-start">
+        <div class="col-lg-5"><img class="footer-logo mb-3" src="assets/liw-worgs-logo.png" alt="LIW Worgs Inc."><p class="footer-note">LIW Worgs Inc. connects clients with organized personal and business solutions through one professional relationship and one secure service platform.</p></div>
+        <div class="col-sm-6 col-lg-3"><div class="footer-heading mb-3">Contact LIW</div><p class="mb-2"><i class="bi bi-geo-alt me-2"></i>873 Liberty Ave<br><span class="ms-4">Brooklyn, NY 11208</span></p><p class="mb-2"><i class="bi bi-telephone me-2"></i><a href="tel:+19292342881">929-234-2881</a></p><p><i class="bi bi-envelope me-2"></i><a href="mailto:liwworgsinc@gmail.com">liwworgsinc@gmail.com</a></p></div>
+        <div class="col-sm-6 col-lg-4"><div class="footer-heading mb-3">Client Access</div><p><a href="register.html">Create an account</a><br><a href="login.html">Sign in</a><br><a href="portal.html">Open client portal</a><br><a href="intake.html">Start a service request</a></p></div>
       </div>
-      <hr class="border-secondary"><div class="d-flex flex-column flex-sm-row justify-content-between gap-2 small" data-legal-links><p class="mb-0">&copy; <span id="year"></span> LIW Worgs Inc. All rights reserved.</p><p class="mb-0"><a href="terms.html">Terms of Use</a><span class="mx-2" aria-hidden="true">|</span><a href="privacy.html">Privacy Policy</a></p></div>
+      <hr class="border-secondary mt-4"><div class="d-flex flex-column flex-sm-row justify-content-between gap-2 small" data-legal-links><p class="mb-0">&copy; <span id="year"></span> LIW Worgs Inc. All rights reserved.</p><p class="mb-0"><a href="terms.html">Terms of Use</a><span class="mx-2">|</span><a href="privacy.html">Privacy Policy</a></p></div>
     </div>
   </footer>
 
-  <div class="loading-overlay" id="loadingOverlay"><div class="loading-box"><div class="spinner-border text-primary" role="status"></div><strong data-loading-message>Working…</strong></div></div>
+  <div class="loading-overlay" id="loadingOverlay" aria-hidden="true"><div class="loading-box"><div class="spinner-border" role="status"></div><strong data-loading-message>Working…</strong></div></div>
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

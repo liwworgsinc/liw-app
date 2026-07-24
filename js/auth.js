@@ -16,6 +16,10 @@
     event.preventDefault();
     const form = event.currentTarget;
     const submit = form.querySelector('[type="submit"]');
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
     submit.disabled = true;
     LIW.setLoading(true, 'Signing you in…');
 
@@ -29,6 +33,7 @@
       window.location.replace(LIW.safeRedirectTarget(fallback));
     } catch (error) {
       console.error(error);
+      LIW.setLoading(false);
       await LIW.notify('error', 'Unable to sign in', error.message || 'Check your email and password.');
     } finally {
       submit.disabled = false;
@@ -40,6 +45,14 @@
     event.preventDefault();
     const form = event.currentTarget;
     const submit = form.querySelector('[type="submit"]');
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    if (!form.querySelector('#termsAccepted')?.checked) {
+      await LIW.notify('warning', 'Agreement required', 'Please accept the Terms of Use and Privacy Policy to continue.');
+      return;
+    }
     if (form.password.value !== form.confirmPassword.value) {
       await LIW.notify('warning', 'Passwords do not match', 'Please enter the same password twice.');
       return;
@@ -70,10 +83,12 @@
       }
 
       form.reset();
+      LIW.setLoading(false);
       await LIW.notify('success', 'Check your email', 'We sent a confirmation link. Open it to activate your LIW account.');
       window.location.replace('login.html');
     } catch (error) {
       console.error(error);
+      LIW.setLoading(false);
       await LIW.notify('error', 'Unable to create account', error.message || 'Please try again.');
     } finally {
       submit.disabled = false;
