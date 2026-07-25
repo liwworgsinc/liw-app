@@ -344,12 +344,24 @@
           priority: 'normal',
           submitted_at: new Date().toISOString()
         })
-        .select('request_number')
+        .select('id,request_number')
         .single();
       if (error) throw error;
 
+      // Create the internal Command Center alert immediately and attempt SMS/email delivery.
+      // Alert delivery problems never cancel a valid client request.
+      LIW.setLoading(true, 'Notifying the LIW team…');
+      try {
+        const { error: alertError } = await LIW.db.functions.invoke('new-client-alert', {
+          body: { request_id: data.id }
+        });
+        if (alertError) console.warn('New-client alert delivery was not completed:', alertError);
+      } catch (alertError) {
+        console.warn('New-client alert delivery was not completed:', alertError);
+      }
+
       LIW.setLoading(false);
-      await LIW.notify('success', 'Request received', `Your LIW confirmation number is ${LIW.requestNumber(data.request_number)}. The request is now visible in your client portal.`);
+      await LIW.notify('success', 'Request received', `Your LIW confirmation number is ${LIW.requestNumber(data.request_number)}. LIW has been notified and the request is now visible in your client portal.`);
       window.location.replace('portal.html');
     } catch (error) {
       console.error(error);

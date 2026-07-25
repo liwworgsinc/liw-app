@@ -1,0 +1,1 @@
+-- Applied to the live Supabase project. See NEW_CLIENT_ALERTS.md for setup details.

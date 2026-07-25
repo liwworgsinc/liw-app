@@ -13,6 +13,9 @@
   let statusChart = null;
   let selectedRequest = null;
   let workspaceModal = null;
+  let staffNotifications = [];
+  let notificationReadIds = new Set();
+  let notificationChannel = null;
 
   const serviceName = (id) => services.find((service) => service.id === id)?.name || 'LIW Service';
   const profileFor = (id) => profiles.find((profile) => profile.id === id) || {};
@@ -121,6 +124,95 @@
       const profile = profileFor(message.user_id);
       return `<button class="operation-row ${message.read_at ? '' : 'unread'}" data-open-workspace="${request?.id || ''}" data-workspace-tab="messages"><span class="operation-icon"><i class="bi bi-chat-left-text"></i></span><span><strong>${LIW.escapeHtml(message.subject)}</strong><small>${LIW.escapeHtml(profile.full_name || 'Client')} · ${LIW.formatDate(message.created_at, true)}</small></span>${message.read_at ? '' : '<span class="unread-dot"></span>'}</button>`;
     }).join('') : operationEmpty('bi-chat-square', 'No client replies yet.');
+  }
+
+  function renderNotifications() {
+    const list = document.getElementById('notificationList');
+    const badge = document.getElementById('notificationBadge');
+    if (!list || !badge) return;
+
+    const unread = staffNotifications.filter((item) => !notificationReadIds.has(item.id));
+    badge.textContent = unread.length > 99 ? '99+' : String(unread.length);
+    badge.classList.toggle('d-none', unread.length === 0);
+
+    if (!staffNotifications.length) {
+      list.innerHTML = '<div class="notification-empty"><i class="bi bi-bell"></i><span>No notifications yet.</span></div>';
+      return;
+    }
+
+    list.innerHTML = staffNotifications.slice(0, 30).map((item) => {
+      const metadata = item.metadata || {};
+      const unreadClass = notificationReadIds.has(item.id) ? '' : 'unread';
+      const icon = item.severity === 'urgent' ? 'bi-exclamation-triangle-fill' : 'bi-person-plus-fill';
+      return `<button class="notification-item ${unreadClass}" type="button" data-notification-open="${item.id}">
+        <span class="notification-icon severity-${LIW.escapeHtml(item.severity || 'info')}"><i class="bi ${icon}"></i></span>
+        <span class="notification-copy">
+          <strong>${LIW.escapeHtml(item.title || 'LIW notification')}</strong>
+          <span>${LIW.escapeHtml(item.body || '')}</span>
+          <small>${LIW.escapeHtml(metadata.client_phone || metadata.client_email || '')}${metadata.client_phone || metadata.client_email ? ' · ' : ''}${LIW.formatDate(item.created_at, true)}</small>
+        </span>
+        ${unreadClass ? '<span class="notification-unread-dot"></span>' : ''}
+      </button>`;
+    }).join('');
+  }
+
+  async function loadNotifications() {
+    const [notificationsResult, readsResult] = await Promise.all([
+      LIW.db.from('staff_notifications').select('*').order('created_at', { ascending: false }).limit(30),
+      LIW.db.from('staff_notification_reads').select('notification_id').eq('user_id', user.id)
+    ]);
+    if (notificationsResult.error) {
+      console.error('Unable to load staff notifications:', notificationsResult.error);
+      return;
+    }
+    if (readsResult.error) console.error('Unable to load notification reads:', readsResult.error);
+    staffNotifications = notificationsResult.data || [];
+    notificationReadIds = new Set((readsResult.data || []).map((item) => item.notification_id));
+    renderNotifications();
+  }
+
+  async function markNotificationsRead(ids) {
+    const unreadIds = ids.filter((id) => id && !notificationReadIds.has(id));
+    if (!unreadIds.length) return;
+    const rows = unreadIds.map((notificationId) => ({ notification_id: notificationId, user_id: user.id }));
+    const { error } = await LIW.db.from('staff_notification_reads').upsert(rows, {
+      onConflict: 'notification_id,user_id',
+      ignoreDuplicates: true
+    });
+    if (error) {
+      console.error('Unable to mark notifications read:', error);
+      return;
+    }
+    unreadIds.forEach((id) => notificationReadIds.add(id));
+    renderNotifications();
+  }
+
+  async function openNotification(notificationId) {
+    const item = staffNotifications.find((notification) => notification.id === notificationId);
+    if (!item) return;
+    await markNotificationsRead([item.id]);
+    const bell = document.getElementById('notificationBell');
+    if (bell && window.bootstrap) window.bootstrap.Dropdown.getOrCreateInstance(bell).hide();
+    if (item.request_id) await openWorkspace(item.request_id);
+  }
+
+  function subscribeToNotifications() {
+    if (notificationChannel) return;
+    notificationChannel = LIW.db
+      .channel(`liw-staff-notifications-${user.id}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'staff_notifications'
+      }, async (payload) => {
+        const item = payload.new;
+        if (!item?.id || staffNotifications.some((existing) => existing.id === item.id)) return;
+        staffNotifications.unshift(item);
+        renderNotifications();
+        LIW.toast('success', 'New LIW client request received');
+        await loadAdmin(false);
+      })
+      .subscribe();
   }
 
   async function loadAdmin(showLoader = true) {
@@ -428,6 +520,11 @@
   }
 
   async function handleClick(event) {
+    const notificationButton = event.target.closest('[data-notification-open]');
+    if (notificationButton) return openNotification(notificationButton.dataset.notificationOpen);
+    const markAllButton = event.target.closest('#markAllNotificationsRead');
+    if (markAllButton) return markNotificationsRead(staffNotifications.map((item) => item.id));
+
     const workspaceButton = event.target.closest('[data-open-workspace]');
     if (workspaceButton?.dataset.openWorkspace) return openWorkspace(workspaceButton.dataset.openWorkspace, workspaceButton.dataset.workspaceTab || 'overview');
     const documentButton = event.target.closest('[data-document-open]');
@@ -466,7 +563,14 @@
     document.addEventListener('change', handleChange);
     document.addEventListener('click', handleClick);
     document.getElementById('clientWorkspaceModal').addEventListener('shown.bs.modal', () => { setAppointmentDefaults(); resetInvoiceForm(); });
-    await loadAdmin();
+    await Promise.all([loadAdmin(), loadNotifications()]);
+    subscribeToNotifications();
+
+    const requestedWorkspace = new URLSearchParams(window.location.search).get('request');
+    if (requestedWorkspace && requestFor(requestedWorkspace)) {
+      await openWorkspace(requestedWorkspace);
+      window.history.replaceState({}, document.title, 'admin.html');
+    }
   }
 
   document.addEventListener('DOMContentLoaded', init);

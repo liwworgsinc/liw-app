@@ -51,3 +51,12 @@ https://liwworgsinc.github.io/liw-app/
 ```
 
 After upload, use Ctrl + F5 to clear cached CSS and JavaScript.
+
+## V7 new-client alerts
+
+- Real-time Command Center notification bell for every new service request
+- Staff notification read/unread tracking
+- Deployed `new-client-alert` Supabase Edge Function
+- SMS destinations: 347-423-9364 and 917-651-6823
+- Optional email alert to liwworgsinc@gmail.com
+- Provider setup details in `NEW_CLIENT_ALERTS.md`
