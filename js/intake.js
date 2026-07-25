@@ -139,11 +139,16 @@
     const card = document.getElementById('servicePreparationCard');
     const list = document.getElementById('serviceDocumentChecklist');
     const notice = document.getElementById('serviceIntakeNotice');
+    const name = document.getElementById('servicePreparationName');
+
+    // Keep intake usable even if an older cached HTML file is temporarily served.
+    if (!card || !list || !notice || !name) return;
     if (!service) {
       card.classList.add('d-none');
       return;
     }
-    document.getElementById('servicePreparationName').textContent = service.name;
+
+    name.textContent = service.name;
     const items = Array.isArray(service.document_checklist) ? service.document_checklist : [];
     list.innerHTML = items.length
       ? items.map((item) => `<li><i class="bi bi-check2-circle"></i><span>${LIW.escapeHtml(item)}</span></li>`).join('')
@@ -159,12 +164,19 @@
       ? (service.intake_fields || []).map(inputForField).join('')
       : '<div class="col-12"><p class="text-muted mb-0">Choose a service to see the request questions.</p></div>';
 
-    document.getElementById('serviceDescription').textContent = service?.short_description || '';
-    document.getElementById('selectedServiceName').textContent = service?.name || '';
-    document.getElementById('serviceSummary').classList.toggle('d-none', !service);
-    document.getElementById('serviceFormHeading').textContent = service?.intake_heading || 'Help our team understand the request.';
-    document.getElementById('serviceFormIntro').textContent = service?.intake_intro || 'Clear details help LIW prepare the right follow-up and document requirements.';
-    document.getElementById('subject').placeholder = service?.subject_placeholder || 'Example: Brief description of your request';
+    const description = document.getElementById('serviceDescription');
+    const selectedName = document.getElementById('selectedServiceName');
+    const summary = document.getElementById('serviceSummary');
+    const formHeading = document.getElementById('serviceFormHeading');
+    const formIntro = document.getElementById('serviceFormIntro');
+    const subject = document.getElementById('subject');
+
+    if (description) description.textContent = service?.short_description || '';
+    if (selectedName) selectedName.textContent = service?.name || '';
+    if (summary) summary.classList.toggle('d-none', !service);
+    if (formHeading) formHeading.textContent = service?.intake_heading || 'Help our team understand the request.';
+    if (formIntro) formIntro.textContent = service?.intake_intro || 'Clear details help LIW prepare the right follow-up and document requirements.';
+    if (subject) subject.placeholder = service?.subject_placeholder || 'Example: Brief description of your request';
     renderPreparation(service);
     applyConditionalVisibility();
   }
