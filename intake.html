@@ -5,7 +5,7 @@
 <meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="#080c27" name="theme-color"/>
 <title>Start a Service Request | LIW Worgs Inc.</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"/><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet"/><link href="css/app.css?v=3.0" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"/><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet"/><link href="css/app.css?v=6.0" rel="stylesheet"/>
 <meta content="Secure LIW Worgs Inc. client account and service workflow page." name="description"/><meta content="noindex,nofollow,noarchive" name="robots"/><meta content="noindex,nofollow,noarchive" name="googlebot"/><meta content="strict-origin-when-cross-origin" name="referrer"/><link href="assets/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="assets/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/><link href="site.webmanifest" rel="manifest"/></head>
 <body>
 <div class="liw-topbar"><div class="container liw-topbar-inner"><span><i class="bi bi-shield-check me-1"></i>Secure LIW client intake</span><span><a href="tel:+19292342881"><i class="bi bi-telephone me-1"></i>Need help? 929-234-2881</a></span></div></div>
@@ -32,11 +32,11 @@
 </section>
 <section class="intake-stage" data-intake-stage="2">
 <span class="eyebrow">Step two</span>
-<h2 class="section-title h1 mt-3">Help our team understand the request.</h2>
-<p class="text-secondary">Clear details help LIW prepare the right follow-up and document requirements.</p>
+<h2 class="section-title h1 mt-3" id="serviceFormHeading">Help our team understand the request.</h2>
+<p class="text-secondary" id="serviceFormIntro">Clear details help LIW prepare the right follow-up and document requirements.</p>
 <div class="mb-4"><label class="form-label" for="subject">Request title</label><input class="form-control" id="subject" name="subject" placeholder="Example: Two-bedroom rental search in Brooklyn"/><div class="form-text">A short title makes this request easier to recognize in your portal.</div></div>
 <div class="row g-4" id="dynamicFields"><div class="col-12"><p class="text-muted mb-0">Choose a service to continue.</p></div></div>
-<div class="alert alert-light border mt-4 mb-0"><i class="bi bi-paperclip me-2 text-primary"></i><strong>Documents come next.</strong> After submission, your portal will let you attach identification, photos, forms, or other supporting files to this request.</div>
+<div class="alert alert-light border mt-4 mb-0"><i class="bi bi-paperclip me-2 text-primary"></i><strong>Documents come next.</strong> The preparation panel shows the usual records for this service. After submission, upload them securely under the new request in your portal.</div>
 </section>
 <section class="intake-stage" data-intake-stage="3">
 <span class="eyebrow">Final step</span>
@@ -61,6 +61,12 @@
 </div>
 </div>
 <aside class="col-xl-4 intake-sidebar">
+<div class="liw-card intake-info-card mb-4 d-none" id="servicePreparationCard">
+  <div class="d-flex align-items-center gap-3 mb-3"><div class="standard-icon"><i class="bi bi-folder-check"></i></div><div><small class="text-uppercase fw-bold text-secondary">Prepare for this service</small><h2 class="h5 fw-bold mb-0" id="servicePreparationName">Selected service</h2></div></div>
+  <p class="small text-secondary mb-2">LIW may request these records after reviewing the intake:</p>
+  <ul class="intake-info-list service-document-list" id="serviceDocumentChecklist"></ul>
+  <div class="sensitive-info-notice mt-3"><i class="bi bi-shield-lock-fill"></i><span id="serviceIntakeNotice"></span></div>
+</div>
 <div class="liw-card intake-info-card mb-4"><div class="d-flex align-items-center gap-3 mb-3"><div class="standard-icon"><i class="bi bi-briefcase-fill"></i></div><div><small class="text-uppercase fw-bold text-secondary">LIW client standard</small><h2 class="h5 fw-bold mb-0">A request with a real record.</h2></div></div><ul class="intake-info-list"><li><i class="bi bi-1-circle-fill"></i><span>Your answers are saved under your authenticated account.</span></li><li><i class="bi bi-2-circle-fill"></i><span>A unique LIW number identifies the request.</span></li><li><i class="bi bi-3-circle-fill"></i><span>The team can update the status as work progresses.</span></li><li><i class="bi bi-4-circle-fill"></i><span>You can return later to upload files and review activity.</span></li></ul></div>
 <div class="experience-panel p-4"><span class="small text-uppercase fw-bold text-warning">What to expect</span><h3 class="display-title h2 text-white mt-2">Submission is the beginning—not the end of communication.</h3><p class="text-white-50">LIW reviews the information, confirms any missing requirements, and contacts you through the method selected in this form.</p><div class="border-top border-secondary pt-3 mt-3"><a class="text-white text-decoration-none fw-bold" href="tel:+19292342881"><i class="bi bi-telephone-fill me-2 text-warning"></i>929-234-2881</a><br/><a class="text-white text-decoration-none small" href="mailto:liwworgsinc@gmail.com"><i class="bi bi-envelope-fill me-2 text-warning"></i>liwworgsinc@gmail.com</a></div></div>
 </aside>
@@ -68,6 +74,6 @@
 </div>
 </main>
 <div aria-hidden="true" class="loading-overlay" id="loadingOverlay"><div class="loading-box"><div class="spinner-border"></div><strong data-loading-message="">Working…</strong></div></div>
-<script defer="" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script><script defer="" src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script defer="" src="js/config.js?v=3.0"></script><script defer="" src="js/common.js?v=3.0"></script><script defer="" src="js/intake.js?v=3.0"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script><script defer="" src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script defer="" src="js/config.js?v=6.0"></script><script defer="" src="js/common.js?v=6.0"></script><script defer="" src="js/intake.js?v=6.0"></script>
 </body>
 </html>
